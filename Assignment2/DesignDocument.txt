@@ -1,0 +1,41 @@
+Q1: How many threads are you going to use? Specify the task that you intend each thread to perform?
+Answer: All my customers are used as threads, so the number of threads equals the total number of my customers. 
+        For each customer thread, they will sleep the time of their arrival time and them Enter the queue regarding to
+        their class_type. Then if
+
+Q2: Do the threads work independently? Or, is there an overall “controller” thread?
+Answer: Threads do not work independently. I have a condition_wait that need other threads to signal it when the condition is met.
+
+Q3: How many mutexes are you going to use? Specify the operation that each mutex will guard?
+Answer: I will use 3 mutexes in total, one mutexes for each class queue(business and economic) and one for time lock. 
+        The two queue mutex are used to lock each queue when customers want to go in to the queue and and when the dequeue operation
+        is done, I will unlock the queue. The time mutex is used for each time I call getCurrentSimulationTime(), so thread will not 
+        occur error when I want to record time.
+
+Q4: Will the main thread be idle? If not, what will it be doing?
+Answer: My main thread will be IDLE, it will waiting for all my customer threads to return and join to the main thread.
+
+Q5: How are you going to represent customers? what type of data structure will you use?
+Answer: I am going to represent customers as with a struct that contain user_id, class_type, arrival_time and serving_time.
+        Then after reading the input file, I am going to store my customers into a customer array, and then passing the 
+        the customer on each index to the thread as a parameter.
+
+Q6: How are you going to ensure that data structures in your program will not be modified concurrently?
+Answer: By using mutex, and condition variable, I can make my program working with concurrency safely. 
+
+Q7: How many convars are you going to use? For each convar:
+(a) Describe the condition that the convar will represent. 
+    Answer: When there is no clerck available, I will use the convar to make the thread wait before selecting the customer
+            from the queue. And signal the convar when the clerck finish serving a customer.
+(b) Which mutex is associated with the convar? Why? 
+    Answer: Both mutex will associate with the convar, because we have two mutexes that do the same thing, so we should release
+            both queues to let other customers(thread) get into the queue. 
+(c) What operation should be performed once pthread cond wait() has been unblocked and re-acquired the mutex?
+    Answer: We need a pthread_cond_signal() to awake the threads that are being blocked by the cond_wait()
+
+Q8: Briefly sketch the overall algorithm you will use? 
+Answer: Sleep the customer thread with their arrival time when they are created. Then lock the thread by using mutex reffering to 
+        their class_type. After enqueue operation, check the queue and clerck status, if there is a customer in business queue, serve
+        the business customer first. After dequeue the customer from queue, record the time and analyze it. I will use a queue to
+        represent clerck, if they are available, they will be in the queue, dequeue when they need to serving somebody else, enter the 
+        queue when they finish serving (which means they are available again)
