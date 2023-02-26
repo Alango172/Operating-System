@@ -7,4 +7,4 @@ The first assignment is about the progrecc handeling.
 
 The second assignment is about thread programming.
 
-The third assignment is about File system operations.
+The third assignment is about FAT12 file system operations.
